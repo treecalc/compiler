@@ -1,0 +1,149 @@
+INPUT I0 {
+	default = 1;
+	info = I0;
+}
+FUNC F0 = v_stringx(list(
+	I0,
+	I0[1],
+	I0.info,
+	I0[1].info
+));
+FUNC F0_1 = I0.unchecked;
+
+INPUT I1 {
+	check = SELF * 2;
+}
+FUNC F1 = v_stringx(list(
+	I1,
+	I1[0],
+	I1[1],
+	I1.check,
+	I1[1].check
+));
+
+INPUT I2 {
+	check = IF index=5 THEN self[4] * 2 ELSE 45 ENDIF ;
+}
+FUNC F2 = v_stringx(list(
+	I2[5],
+	I2[4],
+	I2
+));
+
+INPUT I3 {
+	check = IF index>0 THEN index * self[index-1] ELSE 1 ENDIF ;
+} 
+FUNC F3 = v_stringx(list(
+	I3[5],
+	I3,
+	I3[-1]
+));
+
+INPUT I4 {
+	check = self; // with index 4 -> will ask for input I4[4] */
+	info  = self; // with index 4 -> will ask just for input (not for input[4])! */
+}
+FUNC F4 = v_stringx(list(
+	I4[4],
+	I4,
+	I4[4].info,
+	I4.info
+));
+
+INPUT I5 ;
+FUNC F5 = v_stringx(list(
+	I5,
+	I5[0],
+	I5[0,0,0],
+	I5[0,0,0,1],
+	I5[1,0,0],
+	I5[1],
+	I5.unchecked,
+	I5[5].unchecked
+));
+
+INPUT I6 {
+	myname1 = I6.name;
+	myname2 = I6[3, 7].name;
+	myname3 = self.name;
+	myname4 = self[34].name;
+}
+
+FUNC F6 = I6.myname1 & ";" & I6.myname2 & ";" & I6.myname3 & ";" & I6.myname4 & " should all be I6";
+
+INPUT I7 {
+	name = "abc";
+	thisname = self.name;
+}
+
+FUNC F7 = I7.name & ";" & I7.thisname & " should be 'abc;I7'";
+
+INPUT i8 {
+	name = "name=i8 hardcoded!";
+	othername = i7.name;
+	realname = self.name;
+}
+
+FUNC F8 = i8.name & ";" & i8.othername & ";" & I8.realname & " should be name=i8 hardcoded;abc;i8";
+
+INPUT I9 {
+    table = "T9";
+}
+
+INPUT I10 {
+    table = "T10";
+    filter = key>1; // key
+}       
+
+INPUT I11 {
+    table = "T11";
+    display = "text"; // key
+}                        
+INPUT I12 {
+    table = "T12";
+    displaytext = "key=" & key & ",text=" & text; // key, text
+}
+INPUT I13 {
+    table = "T13";
+    display = "text";
+    displaytext = "key=" & key & ",text=" & text; // key, text
+}                    
+INPUT I14 {
+    table = "T14";
+    vector = list(list(1, 111), list(2,222));
+}
+INPUT I15 {
+    vector = list(list(1, 111), list(2,222));
+    filter = key > 1;
+}
+INPUT I16 {
+    vector = list (list(1, "key 1"), list(2, "key 2"));
+}
+INPUT I17 {
+    vector = list (list(1, "key 1", "irgendwas1"), list(2, "key 2", "irgendwas 2"));
+}
+
+TABLE T9 (code, value) {
+    1, "code 1";
+    2, "code 2";
+}
+TABLE T10 (code, value) {
+    1, "code 1";
+    2, "code 2";
+}
+TABLE T11 (code, value, text) {
+    1, "code 1", "text 1";
+    2, "code 2", "text 2";
+}
+TABLE T12 (code, value, text) {
+    1, "code 1", "text 1";
+    2, "code 2", "text 2";
+}
+TABLE T13 (code, value, text) {
+    1, "code 1", "text 1";
+    2, "code 2", "text 2";
+}
+TABLE T14 (code, value) {
+    2, "code 2";
+    1, "code 1";
+}

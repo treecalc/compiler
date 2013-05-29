@@ -1,0 +1,102 @@
+TREE mytree {
+	NODE m {
+		NODE maincomputes {
+			NODE sub1;
+			NODE sub2;
+			NODE sub3 {
+				NODE sub31;
+				NODE sub32;
+			}
+		}
+		NODE optional_init;
+		NODE optional IF I_INCLUDE_LEVEL1 {
+			NODE opt1;
+			NODE opt2 IF I_include_level2;
+		}
+		NODE funny;
+	}
+	NODE n IF I_include_level1;
+	NODE z {
+	    NODE zsub;
+	}
+}
+
+INPUT I_INCLUDE_LEVEL1;
+INPUT I_include_level2;
+CALC mytree.n {
+	P_n = "n";
+}
+CALC mytree.z {
+    P_z = "z";
+    P_fac(n) = n<=0 ? 1 : P_Fac(n-1) * n ;
+    P_zsub = P_zsub;
+}                   
+CALC mytree.z.zsub {
+    P_zsub = 1;
+}
+CALC mytree.m.funny {
+    P_Mult(i) = i;
+    P_Mult2(ind) = P_Mult(ind);
+}
+
+FUNC F_testfunny(i) = P_Mult(i);
+
+CALC mytree.m {
+    P_Testfunny(i) = F_testfunny(i);
+	P_Single_collx  = v_stringx(collate(P_Single));
+	P_Single_first  = extract(P_Single, 0);
+	P_Sub1_collx    = v_stringx(collate(P_Sub1));
+	P_Sub2_collx    = v_stringx(collate(P_Sub2));
+	P_Sub123_collx  = v_stringx(collate(P_Sub123));
+	P_Sub123_first  = extract(P_Sub123, 0);
+	P_Sub123_second = extract(P_Sub123, 1);
+	P_Sub123__collx = v_stringx(collate(P_Sub123_));
+	P_Sub12_collx   = v_stringx(collate(P_Sub12));
+	P_Sub3_collx    = v_stringx(collate(P_Sub3));
+	P_Sub3__collx   = v_stringx(collate(P_Sub3_));
+}
+
+CALC mytree.m.optional_init {
+	P_optional = 0;
+}
+CALC mytree.m.optional.opt1 {
+	P_optional = 1;
+}
+CALC mytree.m.optional.opt2 {
+	P_optional = 2;
+}
+
+CALC mytree.m.maincomputes {
+	P_Single = "01";
+	P_Sum1  = P_Sub1;
+	P_Sum2  = P_Sub2;
+	P_Sum123 = P_Sub123;
+	P_Sum123_ = P_Sub123_;
+	P_Sum12 = P_Sub12;
+	P_Sum3  = P_Sub3;
+	P_Sum3_ = P_Sub3_;
+}
+CALC mytree.m.maincomputes.sub1 {
+	P_Sub1 = 1;
+	P_Sub12 = 1;
+	P_Sub123 = 1;
+	P_Sub123_ = 1;
+}
+CALC mytree.m.maincomputes.sub2 {
+	P_Sub2 = 2;
+	P_Sub12 = 2;
+	P_Sub123 = 2;
+	P_Sub123_ = 2;
+}
+CALC mytree.m.maincomputes.sub3 {
+	P_Sub3 = 4;
+	P_Sub123 = 4;
+}
+CALC mytree.m.maincomputes.sub3.sub31 {
+	P_Sub3_ = 8;
+	P_Sub123_ = 8;	
+}
+CALC mytree.m.maincomputes.sub3.sub32 {
+	P_Sub3_ = 16;
+	P_Sub123_ = 16;	
+}

@@ -1,0 +1,83 @@
+TREE mytree {
+	NODE m {
+		NODE normal;
+		NODE multiple1 TIMES I_Counter AS current_counter;
+		NODE multiple2 TIMES I_Counter2 AS current_counter2;
+	}
+	NODE uro {
+        NODE Initialization  ;
+        NODE Main_results IF F_LI_InputOk {
+            NODE Riders  {
+                NODE Init  ;
+                NODE Rider TIMES A_LI_Riders AS current_A_LI_Riders  {
+                    NODE AccDeath {
+                        LINK uro.component.rider_calculation ;
+                    }
+                }
+            }
+        }
+    }
+}
+
+TREE uro.component {                   
+    NODE rider_calculation;
+}
+
+FUNC F_LI_InputOk = 1 ;      
+FUNC F_Round2rhd(x) = round(x > 0 ? x + 0.0000001 : x - 0.0000001, 2) ;
+
+CALC mytree.m {
+    P_Test_collx = v_stringx(collate(P_Test));
+    P_Test2Index_collx = v_stringx(collate(P_Test2Index));
+    P_Test2Index_3rd = extract(P_Test2Index, 2);
+}
+
+CALC mytree.m.normal {
+	P_Test = 1;
+	P_Test2 = 1;
+	P_Test2Index = 0;
+	P_Test2Compute = 0;
+}
+
+CALC mytree.m.multiple1 {
+	P_Test = 1;
+}
+CALC mytree.m.multiple2 {
+	P_Test2 = 1;
+	P_Test2Index = current_counter2;
+	P_Test2Compute = 2 ^ current_counter2;
+}
+
+CALC mytree.uro.Initialization {
+   PX_LI_RiderPremiumYear(i) = 0    ;
+   PX_LI_RiderPremiumFreq(i) = 0    ;
+}
+
+CALC mytree.uro.Main_results {
+   PX_LI_RiderPremiumYear(i) = F_Round2rhd(PX_LI_RiderPremiumFreq(i)) ;
+   PX_LI_RiderPremiumFreq(i) =  F_Round2rhd(P_LI_RiderPremiumYearUnrounded(i)) ;
+   P_LI_RiderPremiumYearUnrounded(i) = P_LI_RiderPremiumYear(i, 50000) ;
+}
+   
+CALC mytree.uro.Main_results.Riders.Init {
+   P_LI_RiderPremiumYear(i, sum) = 0    ;
+}
+
+CALC uro.component.rider_calculation {
+   P_LI_RiderPremiumYear(i, sum) = 
+      IF i = current_A_LI_Riders THEN 
+         70
+      ELSE
+         0
+      ENDIF
+    ;                           
+}    
+                                                            
+
+INPUT I_Counter;
+INPUT I_Counter2;
+
+INPUT A_LI_Riders {
+   default = 0    ;
+}
+

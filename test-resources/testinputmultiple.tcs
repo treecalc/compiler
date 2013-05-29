@@ -1,0 +1,54 @@
+TREE maintree {
+	NODE m {
+		NODE init;
+		NODE mult TIMES I_Persons AS current_person;
+	}
+}
+
+CALC maintree.m {
+    P_TestInputx = v_string(collate(P_TestInput), " - ");
+    P_TestInputCalcx = v_string(collate(P_TestInputCalc), " - ");
+    P_TestInputCalcx2 = v_string(collate(P_TestInputCalc2), " - ");
+    P_TestInputCalcx3 = v_string(collate(P_TestInputCalc3), " - ");
+}
+
+
+CALC maintree.m.init {
+	P_TestIndex = 0;
+	P_TestIndexBin = 0;
+	P_Test = 0;                         
+	P_AgeManual = 0;
+	P_AgeAuto = 0;
+	P_AgeFirst = 0;
+	P_Func = 0;
+}
+
+CALC maintree.m.mult {
+    P_Test = 1;
+	P_TestIndex = current_person;
+	P_TestIndexBin = 2^current_person;
+	P_AgeManual = I_Age[current_person];
+	P_AgeAuto   = I_AgeAuto;
+	P_AgeFirst   = I_AgeAuto[0];
+	P_Func = F_Test;
+	P_TestInput = I_TestInput.value;
+	P_TestInputCalc = I_TestInput.value;
+	P_TestInputCalc2 = F_testInput;
+	P_TestInputCalc3 = I_TestInput[2, 0].value;
+}
+
+INPUT I_TestInput {
+    check = v_stringx(index);
+    value = v_stringx(index);
+    autocounter = counterlist (current_person);
+}
+
+INPUT I_Persons;
+INPUT I_Age;                
+INPUT I_AgeAuto {
+    autocounter = counterlist (current_person);
+}
+
+FUNC F_Test = I_AgeAuto ;
+
+FUNC F_TestInput = I_TestInput.value;
