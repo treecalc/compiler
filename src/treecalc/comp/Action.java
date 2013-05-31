@@ -19,7 +19,6 @@ import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
-import treecalc.comp.TcSimpleParser.compilationunit_return;
 
 import treecalc.comp.java.JavaConstants;
 import treecalc.comp.java.JavaDiv;
@@ -27,6 +26,9 @@ import treecalc.comp.java.JavaFunctions;
 import treecalc.comp.java.JavaInput;
 import treecalc.comp.java.JavaNodes;
 import treecalc.comp.java.JavaTables;
+import treecalc.comp.parser.TcSimpleLexer;
+import treecalc.comp.parser.TcSimpleParser;
+import treecalc.comp.parser.TcSimpleParser.compilationunit_return;
 import treecalc.comp.vm.VmFormula;
 import treecalc.comp.vm.VmFunctions;
 import treecalc.comp.vm.VmInput;

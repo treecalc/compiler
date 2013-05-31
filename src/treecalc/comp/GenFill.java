@@ -1,6 +1,6 @@
 package treecalc.comp; 
 
-import static treecalc.comp.TcSimpleParser.*;
+import static treecalc.comp.parser.TcSimpleParser.*;
 
 import java.util.BitSet;
 import java.util.Collection;

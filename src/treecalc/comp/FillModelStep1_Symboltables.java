@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static treecalc.comp.TcSimpleParser.*;
+import treecalc.comp.parser.TcSimpleParser;
+
+import static treecalc.comp.parser.TcSimpleParser.*;
 
 public class FillModelStep1_Symboltables {
 	private final ModelSimple model;

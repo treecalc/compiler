@@ -1,4 +1,4 @@
-package treecalc.gen;
+package treecalc.comp;
 
 import static org.junit.Assert.*;
 
@@ -14,9 +14,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import treecalc.S;
-import treecalc.TciMachine;
-import treecalc.asm.TciAsmReaderWriter;
+import treecalc.rt.S;
+import treecalc.vm.TciMachine;
+import treecalc.vm.asm.TciAsmReaderWriter;
 
 @RunWith(Parameterized.class)
 public class TestNodestimes {
@@ -33,7 +33,7 @@ public class TestNodestimes {
 			break;
 		case METHOD_JCX:
 			try {
-				_s = new TciMachine(TciAsmReaderWriter.read("./src/test/java/gen/testnodestimes/gen.testnodestimes.tcx"));
+				_s = new TciMachine(TciAsmReaderWriter.read("./test/gen/testnodestimes/gen.testnodestimes.tcx"));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

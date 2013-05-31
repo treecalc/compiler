@@ -2,7 +2,7 @@
 
 package treecalc.comp.java; 
 
-import static treecalc.comp.TcSimpleParser.*;
+import static treecalc.comp.parser.TcSimpleParser.*;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -56,17 +56,17 @@ public class JavaFunctions {
 		out.println("import java.util.ArrayList;");
 		out.println("import java.util.HashMap;");
 		out.println();
-		out.println("import com.hackhofer.tc.rt.ExceptionCalculation;");
+		out.println("import treecalc.rt.ExceptionCalculation;");
 		if (trace) {
-			out.println("import com.hackhofer.tc.rt.S.Traceaction;");
+			out.println("import treecalc.rt.S.Traceaction;");
 		}
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.S;");
-		out.println("import com.hackhofer.tc.rt.VFuncref;");
-		out.println("import com.hackhofer.tc.rt.VNull;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.S;");
+		out.println("import treecalc.rt.VFuncref;");
+		out.println("import treecalc.rt.VNull;");
 		out.println();
-		out.println("import static com.hackhofer.tc.rt.B.*;");
-		out.println("import static com.hackhofer.tc.rt.V.*;");
+		out.println("import static treecalc.rt.B.*;");
+		out.println("import static treecalc.rt.V.*;");
 		out.println();
 		out.print("public final class ");
 		out.print(classname);

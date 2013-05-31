@@ -2,7 +2,7 @@
 
 package treecalc.comp.java; 
 
-import static treecalc.comp.TcSimpleParser.TT_ARGDEF;
+import static treecalc.comp.parser.TcSimpleParser.TT_ARGDEF;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,16 +61,16 @@ public class JavaNodes {
 		}
 		out.println("import java.util.ArrayList;");
 		if (gwt) {
-			out.println("import com.hackhofer.tc.rt.gwt.BitSet;");
+			out.println("import treecalc.rt.gwt.BitSet;");
 		} else {
 			out.println("import java.util.BitSet;");
 		}
 		out.println("import java.util.HashMap;");
 
 		out.println();
-		out.println("import com.hackhofer.tc.rt.S;");
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.VNull;");
+		out.println("import treecalc.rt.S;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.VNull;");
 
 		out.println();
 		out.print("public final class ");
@@ -105,16 +105,16 @@ public class JavaNodes {
 		
 		out.println("import java.util.ArrayList;");
 		out.println();
-		out.println("import static com.hackhofer.tc.rt.V.*;");
-		out.println("import static com.hackhofer.tc.rt.B.*;");
+		out.println("import static treecalc.rt.V.*;");
+		out.println("import static treecalc.rt.B.*;");
 		out.println();
-		out.println("import com.hackhofer.tc.rt.S;");
+		out.println("import treecalc.rt.S;");
 		if (trace) {
-			out.println("import com.hackhofer.tc.rt.S.Traceaction;");
+			out.println("import treecalc.rt.S.Traceaction;");
 		}
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.VNull;");
-		out.println("import com.hackhofer.tc.rt.VDouble;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.VNull;");
+		out.println("import treecalc.rt.VDouble;");
 		
 		out.println();
 		out.print("public final class ");

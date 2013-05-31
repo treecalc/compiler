@@ -54,8 +54,8 @@ public class JavaDiv {
 			out.println("import java.lang.reflect.InvocationTargetException;");
 		}
 		if (gwt) {
-			out.println("import com.hackhofer.tc.rt.gwt.CharacterIterator;");
-			out.println("import com.hackhofer.tc.rt.gwt.StringCharacterIterator;");
+			out.println("import treecalc.rt.gwt.CharacterIterator;");
+			out.println("import treecalc.rt.gwt.StringCharacterIterator;");
 		} else {
 			out.println("import java.text.CharacterIterator;");
 			out.println("import java.text.StringCharacterIterator;");
@@ -71,16 +71,16 @@ public class JavaDiv {
 			out.println("import java.io.FileWriter;");
 		}
 		out.println();
-		out.println("import com.hackhofer.tc.rt.CacheKey;");
-		out.println("import com.hackhofer.tc.rt.ExceptionNeedMoreInput;");
-		out.println("import com.hackhofer.tc.rt.LruCache;");
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.VDouble;");
-		out.println("import com.hackhofer.tc.rt.VNull;");
-		out.println("import com.hackhofer.tc.rt.S;");
+		out.println("import treecalc.rt.CacheKey;");
+		out.println("import treecalc.rt.ExceptionNeedMoreInput;");
+		out.println("import treecalc.rt.LruCache;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.VDouble;");
+		out.println("import treecalc.rt.VNull;");
+		out.println("import treecalc.rt.S;");
 		if(gwt) {
-			out.println("import com.hackhofer.tc.rt.gwt." + getClassnameCopyOf() + ";");
-			out.println("import com.hackhofer.tc.rt.gwt." + getClassnameIsWhitespace() + ";");
+			out.println("import treecalc.rt.gwt." + getClassnameCopyOf() + ";");
+			out.println("import treecalc.rt.gwt." + getClassnameIsWhitespace() + ";");
 		}
 		out.println();
 		out.println("/**");
@@ -1533,7 +1533,11 @@ public class JavaDiv {
 			out.println("      traceLastmsg = msg;");
 			out.println("      pw.flush();");
 			out.println("   }");
-			
+		} else { //trace off
+			out.println();
+			out.println("   @Override");
+			out.println("   public void trace(String msg, String result, Traceaction traceaction) {");
+			out.println("   }");
 		}
 		
 		out.println("}");

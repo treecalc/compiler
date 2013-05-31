@@ -133,8 +133,14 @@ tokens {
 }
 
 
-@parser::header       {package treecalc.comp; }
-@lexer::header        {package treecalc.comp; }
+@parser::header       {
+	package treecalc.comp.parser;
+	import treecalc.comp.TcAst; 
+}
+@lexer::header        {
+	package treecalc.comp.parser; 
+	import treecalc.comp.TcAst; 
+}
 
 //@members {
 //    Scope globalscope;

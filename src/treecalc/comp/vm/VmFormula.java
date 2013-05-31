@@ -17,10 +17,10 @@ import treecalc.comp.Scope;
 import treecalc.comp.ScopedSymbol;
 import treecalc.comp.Symbol;
 import treecalc.comp.TcAst;
-import treecalc.comp.TcSimpleParser;
+import treecalc.comp.parser.TcSimpleParser;
 
 
-import static treecalc.comp.TcSimpleParser.*;
+import static treecalc.comp.parser.TcSimpleParser.*;
 
 import treecalc.vm.asm.BFInfo;
 

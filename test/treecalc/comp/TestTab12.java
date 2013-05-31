@@ -1,4 +1,4 @@
-package treecalc.gen;
+package treecalc.comp;
 
 import static org.junit.Assert.*;
 
@@ -31,10 +31,9 @@ public class TestTab12 {
 		switch(method) {
 		case METHOD_JAVA:
 			_s = new _S();
-			break;
-		case METHOD_JCX:
+			break;		case METHOD_JCX:
 			try {
-				_s = new TciMachine(TciAsmReaderWriter.read("./src/test/java/gen/testtab/gen.testtab.tcx"));
+				_s = new TciMachine(TciAsmReaderWriter.read("./test/gen/testtab/gen.testtab.tcx"));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

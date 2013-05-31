@@ -35,12 +35,12 @@ public class JavaConstants {
 			out.print(packagename);
 			out.println(";");
 		}
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.VDouble;");
-		out.println("import com.hackhofer.tc.rt.VString;");
-		out.println("import com.hackhofer.tc.rt.VFuncref;");
-		out.println("import com.hackhofer.tc.rt.VTabref;");
-		out.println("import com.hackhofer.tc.rt.VNull;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.VDouble;");
+		out.println("import treecalc.rt.VString;");
+		out.println("import treecalc.rt.VFuncref;");
+		out.println("import treecalc.rt.VTabref;");
+		out.println("import treecalc.rt.VNull;");
 		out.println();
 		out.println("/**");
 		out.println(" * All constants of the model");

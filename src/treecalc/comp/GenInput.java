@@ -3,7 +3,7 @@ package treecalc.comp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static treecalc.comp.TcSimpleParser.*;
+import static treecalc.comp.parser.TcSimpleParser.*;
 /**
  * Class that is filled up and prepared before generating code
  * @author Stefan

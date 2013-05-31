@@ -76,9 +76,9 @@ public class JavaTables {
 		}
 		out.println("import java.util.HashMap;");
 		out.println();
-		out.println("import com.hackhofer.tc.rt.ExceptionCalculation;");
-		out.println("import com.hackhofer.tc.rt.V;");
-		out.println("import com.hackhofer.tc.rt.VTabref;");
+		out.println("import treecalc.rt.ExceptionCalculation;");
+		out.println("import treecalc.rt.V;");
+		out.println("import treecalc.rt.VTabref;");
 		
 		out.println();
 
@@ -167,10 +167,10 @@ public class JavaTables {
 			out.println(";");
 		}
 		out.println("import java.util.Arrays;");
-		out.println("import com.hackhofer.tc.rt.ExceptionCalculation;");
-		out.println("import com.hackhofer.tc.rt.V;");
+		out.println("import treecalc.rt.ExceptionCalculation;");
+		out.println("import treecalc.rt.V;");
 		if(gwt) {
-			out.println("import com.hackhofer.tc.rt.gwt." + getClassnameCopyOf() + ";");
+			out.println("import treecalc.rt.gwt." + getClassnameCopyOf() + ";");
 		}
 		out.println();
 

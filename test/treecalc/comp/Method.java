@@ -1,4 +1,4 @@
-package treecalc.gen;
+package treecalc.comp;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package treecalc.gen;
+package treecalc.comp;
 
 
 import static org.junit.Assert.*;
@@ -36,7 +36,7 @@ public class TestNodes {
 			break;
 		case METHOD_JCX:
 			try {
-				_s = new TciMachine(TciAsmReaderWriter.read("./src/test/java/gen/testnodes/gen.testnodes.tcx"));
+				_s = new TciMachine(TciAsmReaderWriter.read("./test/gen/testnodes/gen.testnodes.tcx"));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
