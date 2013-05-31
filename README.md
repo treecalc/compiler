@@ -1,4 +1,7 @@
-generator
-=========
+compiler
+========
 
-TreeCalc - Generator for Java, JavaScript, TreeCalc Virtual Machine
+TreeCalc Compiler, with Generator for 
+- Java,
+- JavaScript
+- TreeCalc Virtual Machine
