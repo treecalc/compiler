@@ -8,7 +8,7 @@ import java.util.Map;
 import treecalc.comp.ModelSimple.NodeData;
 import treecalc.comp.ResolvedCalc.ResolveType;
 
-import static treecalc.comp.parser.TcSimpleParser.*;
+import static treecalc.comp.TcSimpleParser.*;
 
 public class ScopeNode implements Scope {
 	private final String id;

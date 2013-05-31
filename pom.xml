@@ -72,8 +72,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					´<sourceDirectory>src/treecalc/comp/parser</sourceDirectory>
-					´<outputDirectory>src/treecalc/comp/parser</outputDirectory>
+					´<sourceDirectory>src/treecalc/comp</sourceDirectory>
+					´<outputDirectory>src-generated/treecalc/comp</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>

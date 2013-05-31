@@ -134,12 +134,12 @@ tokens {
 
 
 @parser::header       {
-	package treecalc.comp.parser;
-	import treecalc.comp.TcAst; 
+	package treecalc.comp;
+	//import treecalc.comp.TcAst; 
 }
 @lexer::header        {
-	package treecalc.comp.parser; 
-	import treecalc.comp.TcAst; 
+	package treecalc.comp; 
+	//import treecalc.comp.TcAst; 
 }
 
 //@members {

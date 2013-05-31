@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.antlr.runtime.CommonToken;
 
-import static treecalc.comp.parser.TcSimpleParser.*;
+import static treecalc.comp.TcSimpleParser.*;
 
 @SuppressWarnings("unchecked")
 public class FillModelStep0_Nodes {

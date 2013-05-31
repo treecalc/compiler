@@ -17,7 +17,7 @@ import treecalc.comp.Scope;
 import treecalc.comp.ScopedSymbol;
 import treecalc.comp.Symbol;
 import treecalc.comp.TcAst;
-import treecalc.comp.parser.TcSimpleParser;
+import treecalc.comp.TcSimpleParser;
 
 import treecalc.rt.V;
 import treecalc.rt.VDouble;
@@ -25,7 +25,7 @@ import treecalc.rt.VFuncref;
 import treecalc.rt.VString;
 import treecalc.rt.VTabref;
 
-import static treecalc.comp.parser.TcSimpleParser.*;
+import static treecalc.comp.TcSimpleParser.*;
 
 public class JavaFormula {
 	private final PrintStream out;

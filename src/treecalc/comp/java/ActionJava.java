@@ -15,9 +15,9 @@ import treecalc.comp.GenFill;
 import treecalc.comp.ModelSimple;
 import treecalc.comp.TcAst;
 import treecalc.comp.TcAstAdapter;
-import treecalc.comp.parser.TcSimpleLexer;
-import treecalc.comp.parser.TcSimpleParser;
-import treecalc.comp.parser.TcSimpleParser.compilationunit_return;
+import treecalc.comp.TcSimpleLexer;
+import treecalc.comp.TcSimpleParser;
+import treecalc.comp.TcSimpleParser.compilationunit_return;
 
 
 public class ActionJava {

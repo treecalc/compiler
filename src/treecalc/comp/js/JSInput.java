@@ -19,7 +19,7 @@ import treecalc.comp.ScopedSymbol;
 import treecalc.comp.Symbol;
 import treecalc.comp.TcAst;
 import treecalc.comp.GenInput.GenInputCalc;
-import treecalc.comp.parser.TcSimpleParser;
+import treecalc.comp.TcSimpleParser;
 
 
 public class JSInput {

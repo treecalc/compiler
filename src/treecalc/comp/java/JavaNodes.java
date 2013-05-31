@@ -2,7 +2,7 @@
 
 package treecalc.comp.java; 
 
-import static treecalc.comp.parser.TcSimpleParser.TT_ARGDEF;
+import static treecalc.comp.TcSimpleParser.TT_ARGDEF;
 
 import java.io.File;
 import java.io.IOException;

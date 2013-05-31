@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.antlr.runtime.CommonToken;
 
-import treecalc.comp.parser.TcSimpleParser;
+import treecalc.comp.TcSimpleParser;
 
-import static treecalc.comp.parser.TcSimpleParser.*;
+import static treecalc.comp.TcSimpleParser.*;
 
 public class FillModelStep2_ResolveNames {
 	private final ModelSimple model;
