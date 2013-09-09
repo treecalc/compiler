@@ -1872,6 +1872,7 @@ public class JSFormula {
 	}
 	public static boolean isSimple(ModelSimple model, TcAst node) {
 		return new JSFormula((PrintStream)null, node, model,0, "", "").isSimple(node);
+//		return true;
 	}
 	public boolean isSimple(TcAst node) {
 		if (node==null) {

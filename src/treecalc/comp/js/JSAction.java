@@ -155,16 +155,34 @@ public class JSAction {
 			this.genpath = genpath;
 		}
 	};
+
+	private static void usage() {
+		System.err.println("arguments: filenameTcs [path]");
+		System.exit(1);
+	}
 	
 	public static void main(String[] args) throws IOException {
+		if (args.length<1 || args.length>2) {
+			usage();
+		}
+		String filenameTcs = args[0];
+		String genpath = args.length>1 ? args[1] : ".";
 		
 		JSAction action = new JSAction();
 		Settings settings = action.new Settings();
-		settings.setFilenamePmt("src/test/resources/input/rs.tcs");
+		settings.setFilenamePmt(filenameTcs);
 		settings.setWalkit(true);
 		settings.setPackagename("package.ist.egal");
-		settings.setGenpath("src/test/js/rs");		
+		settings.setGenpath(genpath);		
 		doit(settings);		
+		
+//		JSAction action = new JSAction();
+//		Settings settings = action.new Settings();
+//		settings.setFilenamePmt("src/test/resources/input/rs.tcs");
+//		settings.setWalkit(true);
+//		settings.setPackagename("package.ist.egal");
+//		settings.setGenpath("src/test/js/rs");		
+//		doit(settings);		
 		//alles in ein js und optimieren/minimieren
 		
 //		JSAction action = new JSAction();

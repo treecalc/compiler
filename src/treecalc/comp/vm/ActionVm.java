@@ -35,9 +35,9 @@ import treecalc.vm.asm.TciAssembler.Asm;
 public class ActionVm {
 	private static ModelSimple model;
 
-	private static void parseTextFile(String filename, String packagename,
+	private static void parseTextFile(String filenameTcs, String genfilename,
 			String genpath) throws IOException, RecognitionException {
-		ANTLRFileStream fs = new ANTLRFileStream(filename);
+		ANTLRFileStream fs = new ANTLRFileStream(filenameTcs);
 		TcSimpleLexer lexer = new TcSimpleLexer(fs);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
@@ -55,13 +55,13 @@ public class ActionVm {
 
 		GenFill.fillModel(model);
 
-		String filenameTc = outpath + "/" + packagename ;
+		String filenameTc = outpath + "/" + genfilename ;
 		new File(filenameTc + ".tci").delete();
-		VmNodes.generate(model, outpath, packagename);
-		VmTables.generate(model, outpath, packagename);
-		VmFunctions.generate(model, outpath, packagename);
-		VmInput.generate(model, outpath, packagename);
-		VmFormula.generate(model, outpath, packagename);
+		VmNodes.generate(model, outpath, genfilename);
+		VmTables.generate(model, outpath, genfilename);
+		VmFunctions.generate(model, outpath, genfilename);
+		VmInput.generate(model, outpath, genfilename);
+		VmFormula.generate(model, outpath, genfilename);
 
 
 		ANTLRFileStream fsTci = new ANTLRFileStream(filenameTc + ".tci"); 
@@ -75,19 +75,19 @@ public class ActionVm {
 		TciAsmReaderWriter.write(asm, filenameTc + ".tcx");
 	}
 
-	public static void doit(String filenamePmt, String packagename, String genpath) throws IOException {
-		System.out.println("start parsing " + filenamePmt);
+	public static void doit(String filenameTcs, String genfilename, String genpath) throws IOException {
+		System.out.println("start parsing " + filenameTcs);
 		long start = System.currentTimeMillis();
 		// System.out.println(new File(".").getAbsolutePath());
 		try {
-			parseTextFile(filenamePmt, packagename, genpath);
+			parseTextFile(filenameTcs, genfilename, genpath);
 		} catch (RecognitionException e) {
-			System.err.println("error in " + filenamePmt + ", line " + e.line + ", pos " + e.charPositionInLine);
+			System.err.println("error in " + filenameTcs + ", line " + e.line + ", pos " + e.charPositionInLine);
 			throw new RuntimeException(e);
 		}
 		long end = System.currentTimeMillis();
 		long sec = (end - start) / 1000;
-		System.out.println("done with " + filenamePmt + " in " + sec + " sec.");
+		System.out.println("done with " + filenameTcs + " in " + sec + " sec.");
 	}
 
 	static void doittestgen(String modelname) throws IOException {
@@ -95,8 +95,22 @@ public class ActionVm {
 			Constants.GENERATED_TESTSOURCE_OUTPUT_PATH + modelname.toLowerCase());
 	}
 
+	private static void usage() {
+		System.err.println("arguments: filenameTcs genfilename genpath");
+		System.exit(1);
+	}
+
 	public static void main(String[] args) throws IOException {
-		doit("./src/test/resources/input/flv.tcs", "gen.flv", "./src/test/java/gen/flv");
+		if (args.length!=3) {
+			usage();
+		}
+		int indarg=0;
+		String filenameTcs = args[indarg++];
+		String genfilename = args.length>indarg ? args[indarg++] : "";
+		String genpath = args.length>indarg ? args[indarg++] : ".";
+		doit(filenameTcs, genfilename, genpath);
+		
+//		doit("./src/test/resources/input/flv.tcs", "gen.flv", "./src/test/java/gen/flv");
 //		doit("c:/vpms/tc/geb/alle_pms/GEBAEUDE.PMT.tcs", "gen.gebaeude", "./src/test/java/gen/gebaeude");
 //		doit("./src/test/resources/input/uv.tcs", "gen.uv", "./src/test/java/gen/uv");
 //		doit("./src/test/resources/input/testinput.tcs", "gen.testinput", "./src/test/java/gen/testinput");

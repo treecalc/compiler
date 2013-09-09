@@ -21,10 +21,6 @@ import treecalc.comp.TcSimpleParser.compilationunit_return;
 
 
 public class ActionJava {
-
-    /* TODO: generate class files directly or via java bytecode assembler for
-	 * initialization parts
-	 */
 	private static ModelSimple model;
 
 	private static void parseTextFile(String filename, String packagename, String genpath, boolean gwt, boolean trace) throws IOException, RecognitionException {
@@ -52,10 +48,10 @@ public class ActionJava {
 		JavaTables.generate(model, outpath, packagename, gwt, trace);
 		JavaFunctions.generate(model, outpath, packagename, trace);
 		JavaConstants.generate(model, outpath, packagename);
-		HashMap<Integer, String> cacheids = model.getCacheIds();
-		for (Entry<Integer,String> cacheid : cacheids.entrySet()) {
-			System.out.println(cacheid.getKey() + ";" + cacheid.getValue());			
-		}
+//		HashMap<Integer, String> cacheids = model.getCacheIds();
+//		for (Entry<Integer,String> cacheid : cacheids.entrySet()) {
+//			System.out.println(cacheid.getKey() + ";" + cacheid.getValue());			
+//		}
 	}
 
 	public static void doit(String filenameTcs, String packagename, String genpath, boolean gwt, boolean trace) throws IOException {
@@ -73,8 +69,35 @@ public class ActionJava {
 		System.out.println("done with " + filenameTcs + " in " + sec + " sec.");
 	}
 
+	private static void usage() {
+		System.err.println("arguments: filenameTcs [packagename [path]] ['gwt'|'trace']*");
+		System.exit(1);
+	}
 	public static void main(String[] args) throws IOException {
-		doit("./src/test/resources/input/flv.tcs", "gen.flv", "./src/test/java/gen/flv", false, false);
+		if (args.length==0 || args.length>5) {
+			usage();
+		}
+		int indarg=0;
+		String filenameTcs = args[indarg++];
+		String packagename = args.length>indarg ? args[indarg++] : "";
+		String path = args.length>indarg ? args[indarg++] : ".";
+		if (packagename.length()>0) {
+			path = path + "/" + packagename.replace('.', '/');
+		}
+		boolean gwt=false;
+		boolean trace=false;
+		while(indarg<args.length) {
+			String arg = args[indarg++];
+			if ("gwt".equalsIgnoreCase(arg)) {
+				gwt=true;
+			} else if ("trace".equalsIgnoreCase(arg)) {
+				trace=true;
+			}
+		}
+		doit(filenameTcs, packagename, path, gwt, trace);
+		return;
+//		doit("./test-resources/tclife.tcs", "gen.tclife", "./src/test/java", false, false);
+//		doit("./src/test/resources/input/flv.tcs", "gen.flv", "./src/test/java/gen/flv", false, false);
 //		doit("./src/test/resources/input/rs.tcs", "gen.rs", "./src/test/java/gen/rs", true);
 //		doit("c:/vpms/tc/geb/alle_pms/GEBAEUDE.PMT.tcs", "gen.gebaeude", "./src/test/java/gen/gebaeude", true);
 //		doit("./src/test/resources/input/uv.tcs", "gen.uv", "./src/test/java/gen/uv", true);

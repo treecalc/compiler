@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -20,15 +21,18 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 
+import treecalc.comp.java.ActionJava;
 import treecalc.comp.java.JavaConstants;
 import treecalc.comp.java.JavaDiv;
 import treecalc.comp.java.JavaFunctions;
 import treecalc.comp.java.JavaInput;
 import treecalc.comp.java.JavaNodes;
 import treecalc.comp.java.JavaTables;
+import treecalc.comp.js.JSAction;
 import treecalc.comp.TcSimpleLexer;
 import treecalc.comp.TcSimpleParser;
 import treecalc.comp.TcSimpleParser.compilationunit_return;
+import treecalc.comp.vm.ActionVm;
 import treecalc.comp.vm.VmFormula;
 import treecalc.comp.vm.VmFunctions;
 import treecalc.comp.vm.VmInput;
@@ -158,73 +162,95 @@ public class Action {
 			Constants.GENERATED_TESTSOURCE_OUTPUT_PATH + modelname.toLowerCase(), false, null, false);
 	}
 
+	private static void usage() {
+		System.err.println("arguments: 'java' filenameTcs [packagename [genpath]] ['gwt'|'trace']*");
+		System.err.println("      OR   'vm' filenameTcs genfilename genpath");
+		System.err.println("      OR   'js' filenameTcs genpath");
+		System.exit(1);
+	}
+	
 	public static void main(String[] args) throws IOException {
-		if (args.length == 0) {
-			printUseUsage();
-		} else if (args.length == 1) {
-			if (args[0].startsWith("-")) {
-				if (args[0].equalsIgnoreCase("-usage")) {
-					System.out.println("Usage:");
-					System.out.println("-version ... prints Version number");
-					System.out.println("-usage ... prints usage");
-					System.out.println("(filename.tcs [jarname])* ... you can convert *.tcs files as much as you like, optinal you can add to every *.tcs file the name of the resulting jar");
-					System.out.println("Usage");
-					System.out.println("Usage");
-					/* TODO */
-				} else if (args[0].equalsIgnoreCase("-mavenunittests")) {
-					List<String> listOfModelNames = getTestModelNames();
-					for (String s : listOfModelNames) {
-						doittestgen(s);
-					}
-				} else if (args[0].equalsIgnoreCase("-version")) {
-					System.out.println("Version " + getVersionFromMaven());
-				}
-			} else if (checkTcsFileString(args[0])) {
-				if (checkFileExist(args[0])) {
-					String modelName = null;
-					if (args[0].indexOf("/") != -1) {
-						modelName = args[0].split("/")[args[0].split("/").length - 1].replace(".tcs", "");
-					} else {
-						modelName = args[0].replace(".tcs", "");
-					}
-
-					doit(args[0], false, true, "gen." + modelName.toLowerCase(), modelName.toLowerCase(), true, null, false);
-				} else {
-					System.out.println("File " + args[0] + " does not exist.");
-				}
-			} else {
-				printUseUsage();
-			}
-		} else if (checkTcsFileString(args[0])) {
-			List<String[]> list = new ArrayList<String[]>();
-			for (int i = 0; i < args.length; i++) {
-				if (checkFileExist(args[i])) {
-					String modelName = null;
-					if (args[0].indexOf("/") != -1) {
-						modelName = args[i].split("/")[args[i].split("/").length - 1].replace(".tcs", "");
-					} else {
-						modelName = args[i].replace(".tcs", "");
-					}
-					if (checkTcsFileString(args[i]) && !(args.length == i + 1) && !checkTcsFileString(args[i + 1])) {
-						String jarName = args[i + 1];
-						list.add(new String[] { args[i], modelName.toLowerCase(), jarName.toLowerCase() });
-						i++;
-					} else {
-						list.add(new String[] { args[i], modelName.toLowerCase(), null });
-					}
-				} else {
-					System.out.println("File " + args[i] + " does not exist.");
-					return;
-				}
-			}
-
-			for (String[] listEntry : list) {
-				doit(listEntry[0], false, true, "gen." + listEntry[1], listEntry[1], true, listEntry[2], false);
-			}
-
-		} else {
-			printUseUsage();
+		if (args.length<1) {
+			usage();
 		}
+		if ("java".equalsIgnoreCase(args[0])) {
+			ActionJava.main(Arrays.copyOfRange(args, 1, args.length));
+		} else if ("vm".equalsIgnoreCase(args[0])) {
+			ActionVm.main(Arrays.copyOfRange(args, 1, args.length));
+		} else if ("js".equalsIgnoreCase(args[0])){
+			JSAction.main(Arrays.copyOfRange(args, 1, args.length));
+		} else {
+			usage();
+		}
+	}
+
+//	public static void main(String[] args) throws IOException {
+//		if (args.length == 0) {
+//			printUseUsage();
+//		} else if (args.length == 1) {
+//			if (args[0].startsWith("-")) {
+//				if (args[0].equalsIgnoreCase("-usage")) {
+//					System.out.println("Usage:");
+//					System.out.println("-version ... prints Version number");
+//					System.out.println("-usage ... prints usage");
+//					System.out.println("(filename.tcs [jarname])* ... you can convert *.tcs files as much as you like, optinal you can add to every *.tcs file the name of the resulting jar");
+//					System.out.println("Usage");
+//					System.out.println("Usage");
+//					/* TODO */
+//				} else if (args[0].equalsIgnoreCase("-mavenunittests")) {
+//					List<String> listOfModelNames = getTestModelNames();
+//					for (String s : listOfModelNames) {
+//						doittestgen(s);
+//					}
+//				} else if (args[0].equalsIgnoreCase("-version")) {
+//					System.out.println("Version " + getVersionFromMaven());
+//				}
+//			} else if (checkTcsFileString(args[0])) {
+//				if (checkFileExist(args[0])) {
+//					String modelName = null;
+//					if (args[0].indexOf("/") != -1) {
+//						modelName = args[0].split("/")[args[0].split("/").length - 1].replace(".tcs", "");
+//					} else {
+//						modelName = args[0].replace(".tcs", "");
+//					}
+//
+//					doit(args[0], false, true, "gen." + modelName.toLowerCase(), modelName.toLowerCase(), true, null, false);
+//				} else {
+//					System.out.println("File " + args[0] + " does not exist.");
+//				}
+//			} else {
+//				printUseUsage();
+//			}
+//		} else if (checkTcsFileString(args[0])) {
+//			List<String[]> list = new ArrayList<String[]>();
+//			for (int i = 0; i < args.length; i++) {
+//				if (checkFileExist(args[i])) {
+//					String modelName = null;
+//					if (args[0].indexOf("/") != -1) {
+//						modelName = args[i].split("/")[args[i].split("/").length - 1].replace(".tcs", "");
+//					} else {
+//						modelName = args[i].replace(".tcs", "");
+//					}
+//					if (checkTcsFileString(args[i]) && !(args.length == i + 1) && !checkTcsFileString(args[i + 1])) {
+//						String jarName = args[i + 1];
+//						list.add(new String[] { args[i], modelName.toLowerCase(), jarName.toLowerCase() });
+//						i++;
+//					} else {
+//						list.add(new String[] { args[i], modelName.toLowerCase(), null });
+//					}
+//				} else {
+//					System.out.println("File " + args[i] + " does not exist.");
+//					return;
+//				}
+//			}
+//
+//			for (String[] listEntry : list) {
+//				doit(listEntry[0], false, true, "gen." + listEntry[1], listEntry[1], true, listEntry[2], false);
+//			}
+//
+//		} else {
+//			printUseUsage();
+//		}
 		// doitgen("testinput");
 		// doitgen("URO_LI_ENDOW");
 		// doitgen("U_BUFT_VIP_CLIENT");
@@ -287,7 +313,7 @@ public class Action {
 		// doit("c:/temp/temp/rvwebkfz.pmt.tcs", false, true);
 		// doit("c:/temp/temp/test.pmt.tcs", true, true);
 		// System.out.println("total done.");
-	}
+//	}
 
 	private static boolean checkFileExist(String fileWithPath) {
 		File f = new File(fileWithPath);

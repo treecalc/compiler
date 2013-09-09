@@ -112,13 +112,13 @@
 				<version>2.4</version>
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
-					<finalName>TreecalcGenerator</finalName>
+					<finalName>tc-compiler</finalName>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>treecalc.gen.Action</mainClass>
+							<mainClass>treecalc.comp.Action</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

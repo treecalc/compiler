@@ -1488,11 +1488,9 @@ public class VmFormula {
 	
 	public static boolean isSimple(ModelSimple model, TcAst node) {
 		return new VmFormula((PrintStream)null, node, model).isSimple(node);
-	}
-	
-//	public boolean isSimple(TcAst node) {
 //		return true;
-//	}
+	}
+
 	public boolean isSimple(TcAst node) {
 		if (node==null) {
 			return true;

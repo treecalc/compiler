@@ -1,0 +1,324 @@
+TREE TcLife {
+	NODE MainTariff  {
+		NODE BaseValues  ;
+	}
+	NODE AccidentalDeath IF I_AccidentalDeath_YN ;
+	NODE Init  ;
+}
+
+CALC TcLife {
+   R_PremYearBeforeTax = 
+      round(
+	     R_prem * (1 + F_PaymentFrequency_Fact(I_paymentfrequency)), 
+		 2
+	   )
+    ;
+   R_Tax = round(
+              R_PremYearBeforeTax * T_Constants["tax"],
+              2
+           )
+    ;
+   R_PremYear = R_PremYearBeforeTax + R_Tax ;
+   R_PremFreq = round( R_PremYear / I_PaymentFrequency, 2) ;
+}
+
+CALC TcLife.MainTariff {
+   R_Prem = round(
+				I_SumInsured 
+				* 
+				F_PremBrutto( R_Age, R_DurationYears )
+			,
+				2
+            )
+    ;
+
+   R_PremMain = R_Prem ;
+
+   R_SurrenderValue(t) = 
+		round(
+			I_SumInsured 
+			* 
+			F_SurrenderValue(
+				R_Age ,
+				R_DurationYears ,
+				t
+			)
+		, 
+			2
+		)
+    ;
+   R_TechnicalReserve(t) = F_Res(
+         R_Age ,
+         R_DurationYears,
+         t
+      ) 
+    ;
+
+}
+
+CALC TcLife.MainTariff.BaseValues {
+   R_Age =  (isdate(I_ContractBeginDate) ? 0 : error("invalid contract begin date"))
+			+ (isdate(I_DateOfBirth) ? 0 : error("invalid date of birth"))
+            + year(I_ContractBeginDate) - year(I_DateOfBirth)
+	;
+
+   R_DurationYears = 
+		(isdate(I_ContractBeginDate) ? 0 : error("invalid contract begin date"))
+		+ (isdate(I_ContractEndDate) ? 0 : error("invalid contract end date"))
+		+ IF month(I_ContractEndDate) <> month(I_ContractBeginDate) ||
+		     day(I_ContractEndDate) <> day(I_ContractBeginDate) THEN
+				error("The contract end date (day, month) has to match the contract begin date")
+		  ELSE
+				0
+		  ENDIF
+		+ year(I_ContractEndDate) - year(I_ContractBeginDate)
+	;
+
+}
+
+CALC TcLife.AccidentalDeath {
+   R_Prem = round(I_SumInsured * T_Constants["accDeath"], 2) ;
+   R_PremAccDeath = R_Prem ;
+
+}
+
+CALC TcLife.Init {
+   R_PremAccDeath = 0 ;
+}
+
+INPUT I_DateOfBirth ;
+
+INPUT I_ContractBeginDate {
+   default = today("D.M.Y");
+}
+
+INPUT I_ContractEndDate {
+   default = date(I_ContractBeginDate, 0, 0, 20, "D.M.Y") ;
+}
+
+INPUT I_SumInsured ;
+
+INPUT I_PaymentFrequency {
+   table = "T_PaymentFrequency" ;
+   default = 1 ;
+}
+
+INPUT I_AccidentalDeath_YN {
+   table = "T_YN" ;
+   default = 1 ;
+}
+
+FUNC F_aexn(age, n) = 
+	(F_Nx(age) - F_Nx(age+n))
+	/
+	F_Dx(age)
+	;
+
+FUNC F_nAx(age, n) =  
+	(F_Mx(age) - F_Mx(age+n)) 
+	/
+	F_Dx(age)
+	;
+
+FUNC F_nEx(age, n) = 
+   IF n > 0 THEN 
+      F_Dx(age + n) / F_Dx(age)
+   ELSE
+      n = 0 ? 1 : 0
+   ENDIF
+ ;
+
+FUNC F_vn(n) =  1 / (1 + F_InterestRate) ^ n ;
+
+FUNC F_qx(age) = age <= 100 ? T_Mortality_Unisex[age+0].qx : 1 ;
+
+FUNC F_Lx(age) = age<=0 ? 100000 : F_Lx(age-1) * (1-F_qx(age-1)) ;
+
+FUNC F_Dx(age) =  F_LX(age) * F_vn(age) ;
+
+FUNC F_Nx(age) = 
+	IF age <= 100 THEN 
+		F_Nx(age+1) + F_Dx(age)
+	ELSE
+		0
+	ENDIF
+ ;
+
+FUNC F_Mx(age) =  
+	F_vn(1) * F_Nx(age)
+	-
+	F_Nx(age+1)
+;
+	
+FUNC F_InterestRate = T_Constants["interestRate"]  ;
+
+FUNC F_Alpha = T_Constants["alpha"]  ;
+
+FUNC F_AlphaZill = T_Constants["alphaZill"]  ;
+
+FUNC F_Beta = T_Constants["beta"]  ;
+
+FUNC F_Gamma = T_Constants["gamma"]  ;
+
+FUNC F_PaymentFrequency_Fact(payfreq) =  T_PaymentFrequency[payfreq].surcharge_perc / 100 ;
+
+FUNC F_PremBrutto(x, n) =
+	(F_nAx(x, n) + F_nEx(x, n) + F_Alpha + F_Gamma * F_aexn(x, n))
+	/
+	( (1 - F_Beta) * F_aexn(x, n) )
+	;
+	
+FUNC F_PremZill(x, n) =  
+	(F_nAx(x, n) + F_nEx(x, n) + F_AlphaZill)
+	/
+	F_aexn(x, n)
+	;
+
+FUNC F_Res(x, n, t) = 
+	max(
+		F_nAx(x+t, n-t) + F_nEx(x+t, n-t) 
+		- 
+		F_PremZill(x, n) * F_aexn(x+t, n-t)
+	,
+		0
+	)
+;
+
+FUNC F_SurrenderValue(x, n, t) = F_Res(x, n, t) * F_AccrualFact(n, t) ;
+
+FUNC F_AccrualFact(n, t) = 
+	IF  t >= n THEN 
+		1
+	ELSE
+		max(
+			0.95,
+			min(
+				0.94 + 0.004 * t,
+				0.98
+			)
+		)
+	ENDIF
+ ;
+
+TABLE T_YN(key, value) {
+   0, no ;
+   1, yes ;
+}
+TABLE T_PaymentFrequency(key, value, surcharge_perc) {
+   1, yearly, 0 ;
+   2, "half-yearly", 1 ;
+   4, quartlerly, 2 ;
+   12, monthly, 3 ;
+}
+TABLE T_Mortality_Unisex(Age, qx) {
+   0, 0.01634820 ;
+   1, 0.00116395 ;
+   2, 0.00071698 ;
+   3, 0.00054097 ;
+   4, 0.00041296 ;
+   5, 0.00034598 ;
+   6, 0.00033400 ;
+   7, 0.00029698 ;
+   8, 0.00030499 ;
+   9, 0.00035797 ;
+   10, 0.00026598 ;
+   11, 0.00031797 ;
+   12, 0.00032097 ;
+   13, 0.00038698 ;
+   14, 0.00037698 ;
+   15, 0.00052095 ;
+   16, 0.00062497 ;
+   17, 0.00063693 ;
+   18, 0.00066992 ;
+   19, 0.00069091 ;
+   20, 0.00070188 ;
+   21, 0.00067890 ;
+   22, 0.00073488 ;
+   23, 0.00074087 ;
+   24, 0.00069590 ;
+   25, 0.00080987 ;
+   26, 0.00085786 ;
+   27, 0.00093288 ;
+   28, 0.00093085 ;
+   29, 0.00102186 ;
+   30, 0.00111283 ;
+   31, 0.00120983 ;
+   32, 0.00128078 ;
+   33, 0.00154577 ;
+   34, 0.00166973 ;
+   35, 0.00184072 ;
+   36, 0.00187973 ;
+   37, 0.00217770 ;
+   38, 0.00248664 ;
+   39, 0.00272856 ;
+   40, 0.00317548 ;
+   41, 0.00367440 ;
+   42, 0.00394740 ;
+   43, 0.00452831 ;
+   44, 0.00493626 ;
+   45, 0.00562814 ;
+   46, 0.00601305 ;
+   47, 0.00679795 ;
+   48, 0.00754180 ;
+   49, 0.00826670 ;
+   50, 0.00898161 ;
+   51, 0.00965947 ;
+   52, 0.00996355 ;
+   53, 0.01095021 ;
+   54, 0.01172816 ;
+   55, 0.01287808 ;
+   56, 0.01332799 ;
+   57, 0.01444385 ;
+   58, 0.01503186 ;
+   59, 0.01684248 ;
+   60, 0.01804144 ;
+   61, 0.01925939 ;
+   62, 0.02069704 ;
+   63, 0.02218184 ;
+   64, 0.02389279 ;
+   65, 0.02642241 ;
+   66, 0.02893719 ;
+   67, 0.03110605 ;
+   68, 0.03341298 ;
+   69, 0.03594694 ;
+   70, 0.03921690 ;
+   71, 0.04245191 ;
+   72, 0.04540888 ;
+   73, 0.04957977 ;
+   74, 0.05372766 ;
+   75, 0.05931043 ;
+   76, 0.06573047 ;
+   77, 0.07231343 ;
+   78, 0.07975819 ;
+   79, 0.08752043 ;
+   80, 0.09484969 ;
+   81, 0.10737537 ;
+   82, 0.11692835 ;
+   83, 0.12818698 ;
+   84, 0.13693182 ;
+   85, 0.15092763 ;
+   86, 0.16386700 ;
+   87, 0.17749241 ;
+   88, 0.19180387 ;
+   89, 0.20679837 ;
+   90, 0.22248892 ;
+   91, 0.23886651 ;
+   92, 0.25593315 ;
+   93, 0.27368283 ;
+   94, 0.29212156 ;
+   95, 0.31124733 ;
+   96, 0.33106215 ;
+   97, 0.35156702 ;
+   98, 0.37275792 ;
+   99, 0.39463488 ;
+   100, 0.41720488 ;
+}
+TABLE T_Constants(key, value) {
+   alpha       , 0.01 ;
+   alphaZill   , 0.005 ;
+   beta        , 0.02 ;
+   gamma       , 0.003 ;
+   interestRate, 0.03 ;
+   accDeath    , 0.007 ;
+   tax         , 0.04 ;
+}
